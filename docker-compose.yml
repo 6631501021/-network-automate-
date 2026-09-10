@@ -1,0 +1,41 @@
+services:
+
+  backend:
+    build:
+      context: ./backend
+
+    container_name: router-backend
+
+    environment:
+      ROUTER_USERNAME: ${ROUTER_USERNAME}
+      ROUTER_PASSWORD: ${ROUTER_PASSWORD}
+      SSH_PORT: ${SSH_PORT:-22}
+
+    restart: unless-stopped
+
+    networks:
+      - router-network
+
+
+  frontend:
+    build:
+      context: ./frontend
+
+    container_name: router-frontend
+
+    ports:
+      - "8080:80"
+
+    depends_on:
+      - backend
+
+    restart: unless-stopped
+
+    networks:
+      - router-network
+
+
+networks:
+
+  router-network:
+    driver: bridge
